@@ -74,11 +74,13 @@ public class CarHttp {
     }
 
     private void printHeaders(Map<String, List<String>> headerFields) {
+        System.out.println("\n##### HTTP response headers ######");
         Iterator<String> iterator = headerFields.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
             System.out.println(key + ": " + headerFields.get(key));
         }
+        System.out.println("####################################\n");
     }
 
     private String readRequestBody(InputStream httpExchange) throws IOException {
