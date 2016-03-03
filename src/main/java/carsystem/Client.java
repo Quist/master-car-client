@@ -56,8 +56,8 @@ public class Client {
             printHelp();
         } else if (command.startsWith("create ")) {
             createCar(command.substring("create ".length(), command.length()));
-        } else if (command.startsWith("get ")) {
-            getCar();
+        } else if (command.equals("get") || command.startsWith("get ")) {
+            parseGetCommand(command.substring("get".length(), command.length()));
         }
     }
 
@@ -65,7 +65,24 @@ public class Client {
         carService.create(args);
     }
 
-    public void getCar() {
+    private void parseGetCommand(String args) {
+        if (args.trim().equals("")) {
+           getCars();
+        } else {
+            getCar(args.trim());
+        }
+    }
+
+    private void getCar(String carId) {
+        Car car = carService.getCar(carId);
+        if (car == null) {
+            System.out.println("Car with registration number " + carId + " was not found");
+        } else {
+            System.out.println(car.toString());
+        }
+    }
+
+    private void getCars() {
         List<Car> cars = carService.getCars();
         for(Car car : cars) {
             System.out.println(car.toString());

@@ -42,4 +42,15 @@ public class CarService {
         return cars;
     }
 
+    public Car getCar(String carId) {
+        HttpResponse response;
+        try {
+            response = http.get("/cars/" + carId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return new Gson().fromJson(response.getResponse(), Car.class);
+    }
 }

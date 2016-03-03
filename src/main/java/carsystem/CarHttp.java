@@ -1,11 +1,7 @@
 package carsystem;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
@@ -61,26 +57,19 @@ public class CarHttp {
     }
 
     private HttpResponse sendGet(URL url) throws IOException {
+        System.out.println("\nSending 'GET' request to URL : " + url);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
+        con.connect();
 
-        System.out.println("\nSending 'GET' request to URL : " + url);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer responseBuffer = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            responseBuffer.append(inputLine);
-        }
-        in.close();
         printHeaders(con.getHeaderFields());
-
+        String response = "";
         int responseCode = con.getResponseCode();
+        if (responseCode >= 200 && responseCode < 300) {
+            response = readRequestBody(con.getInputStream());
+        }
 
-        HttpResponse httpResponse= new HttpResponse(responseCode, responseBuffer.toString());
-
+        HttpResponse httpResponse= new HttpResponse(responseCode, response);
         return httpResponse;
     }
 
@@ -90,6 +79,19 @@ public class CarHttp {
             String key = iterator.next();
             System.out.println(key + ": " + headerFields.get(key));
         }
+    }
+
+    private String readRequestBody(InputStream httpExchange) throws IOException {
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(httpExchange));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
     }
 
 }
