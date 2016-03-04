@@ -46,6 +46,7 @@ public class Client {
         System.out.println("Available commands:");
         System.out.println("get %id - Get all cars or retrieves a car with an ID");
         System.out.println("create - %type Create a new car");
+        System.out.println("update - %id %type Update type of car");
         System.out.println("delete %id -  Delete all cars, or the car with ID");
 
     }
@@ -58,7 +59,24 @@ public class Client {
             createCar(command.substring("create ".length(), command.length()));
         } else if (command.equals("get") || command.startsWith("get ")) {
             parseGetCommand(command.substring("get".length(), command.length()));
+        } else if (command.startsWith("delete ")) {
+            parseDeleteCommand(command.substring("delete ".length(), command.length()));
+        } else if (command.startsWith("update ")) {
+            parseUpdateCommand(command.substring("update ".length(), command.length()));
+        } else {
+            System.out.println("Unknown command");
         }
+    }
+
+    private void parseUpdateCommand(String args) {
+        String arglist[] = args.split(" ");
+        if (arglist.length < 2) {
+            System.out.println("Too few arguments. Usage: update %id %newtype");
+            return;
+        }
+
+        Car car = new Car(arglist[0], arglist[1]);
+        carService.updateCar(car);
     }
 
     private void createCar(String args) {
@@ -71,6 +89,18 @@ public class Client {
         } else {
             getCar(args.trim());
         }
+    }
+
+    private void parseDeleteCommand(String args) {
+        if (args.trim().equals("")) {
+            System.out.println("Usage: delete %id");
+        } else {
+            deleteCar(args.trim());
+        }
+    }
+
+    private void deleteCar(String carId) {
+        carService.deleteCar(carId);
     }
 
     private void getCar(String carId) {

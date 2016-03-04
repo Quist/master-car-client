@@ -53,4 +53,20 @@ public class CarService {
 
         return new Gson().fromJson(response.getResponse(), Car.class);
     }
+
+    public void deleteCar(String carId) {
+        try {
+            HttpResponse response = http.delete("/cars/" + carId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateCar(Car car) {
+        try {
+            http.put("/cars/" + car.getRegistration(), new Gson().toJson(car));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

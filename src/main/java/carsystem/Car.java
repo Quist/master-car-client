@@ -11,6 +11,15 @@ public class Car {
         this.registration = createRegistration();
     }
 
+    public Car(String registration, String type) {
+        this.registration = registration;
+        this.type = type;
+    }
+
+    public String getRegistration() {
+        return registration;
+    }
+
     @Override
     public String toString() {
         return String.format("Type: %-15s Registration: %s", type, registration);
