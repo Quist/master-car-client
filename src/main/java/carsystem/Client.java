@@ -16,8 +16,8 @@ public class Client {
         }
 
         String url = args[0];
-        carsystem.Client client = new carsystem.Client(new URL(url));
-        new CommandLineInterface(client).start();
+        //carsystem.Client client = new carsystem.Client(new URL(url));
+        new Simulator(new CarService(new CarHttp(new URL(url)))).start();
     }
 
     public Client(URL url) {

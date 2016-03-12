@@ -17,14 +17,17 @@ public class CarService {
         this.http = http;
     }
 
-    public void create(String type) {
+    public Car create(String type) {
         Car car = new Car(type);
         String carJson = new Gson().toJson(car);
+        HttpResponse response = null;
         try {
-            http.post("/cars", carJson);
+            response = http.post("/cars", carJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return new Gson().fromJson(response.getResponse(), Car.class);
     }
 
     public List<Car> getCars() {

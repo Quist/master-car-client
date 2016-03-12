@@ -18,11 +18,11 @@ public class CarHttp {
         this.baseUrl = baseUrl;
     }
 
-    public void post(String uri, String payload) throws IOException {
+    public HttpResponse post(String uri, String payload) throws IOException {
         byte[] payloadBytes = payload.getBytes();
 
         URL url = new URL(baseUrl.toString() + uri);
-        sendPost(url, payloadBytes);
+        return sendPost(url, payloadBytes);
     }
 
     public HttpResponse get(String uri) throws IOException {
@@ -94,7 +94,7 @@ public class CarHttp {
         String response= readRequestBody(con.getInputStream());
 
         int responseCode = con.getResponseCode();
-        HttpResponse httpResponse= new HttpResponse(responseCode, new Gson().toJson(response));
+        HttpResponse httpResponse= new HttpResponse(responseCode, response);
 
         return httpResponse;
     }

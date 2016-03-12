@@ -34,4 +34,7 @@ public class Car {
         return reg;
     }
 
+    public String getType() {
+        return type;
+    }
 }
