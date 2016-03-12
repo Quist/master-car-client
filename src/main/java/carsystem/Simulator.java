@@ -27,6 +27,23 @@ public class Simulator {
             System.out.println("We created 5 cars, but getCars returned " + carService.getCars().size() + " cars!");
         }
 
+        if (! hasSameTypeOnServer(bmw)) {
+            System.out.println("Getting our BWM based on type did not return the correct type");
+        }
 
+        Car updatedBmw = new Car(bmw.getRegistration(), "ULTRA BMW");
+        carService.updateCar(updatedBmw);
+        hasSameTypeOnServer(updatedBmw);
+
+        carService.deleteCar(updatedBmw.getRegistration());
+        if (carService.getCars().size() != 4) {
+            System.out.println("We created 5 cars then deleted 1, but getCars returned " + carService.getCars().size() + " cars!");
+        }
+
+    }
+
+    private boolean hasSameTypeOnServer(Car bmw) {
+        Car resultCar = carService.getCar(bmw.getRegistration());
+        return resultCar.getType().equals(bmw.getType());
     }
 }
