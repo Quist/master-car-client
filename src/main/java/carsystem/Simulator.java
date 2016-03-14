@@ -1,6 +1,9 @@
 package carsystem;
 
+import java.util.logging.Logger;
+
 public class Simulator {
+    private final static Logger logger = Logger.getLogger(Simulator.class.getName());
 
     private final CarService carService;
 
@@ -13,9 +16,14 @@ public class Simulator {
     }
 
     private void testCase1() {
+        logger.info("Starting test case 1");
+
+        carService.deleteAllCars();
+
         Car bmw = carService.create("BWM");
         if (!bmw.getType().equals("BMW")) {
-            System.out.println("We created a car with type BMW, but type returned was: " + bmw.getType());
+            logger.warning("We created a car with type BMW, but type returned was: " + bmw.getType());
+            throw new RuntimeException("We created a car with type BMW, but type returned was: " + bmw.getType());
         }
 
         carService.create("Mercedes");
@@ -24,11 +32,13 @@ public class Simulator {
         carService.create("BV 206");
 
         if (carService.getCars().size() != 5) {
-            System.out.println("We created 5 cars, but getCars returned " + carService.getCars().size() + " cars!");
+            logger.warning("We created 5 cars, but getCars returned " + carService.getCars().size() + " cars!");
+            throw new RuntimeException("We created 5 cars, but getCars returned " + carService.getCars().size() + " cars!");
         }
 
         if (! hasSameTypeOnServer(bmw)) {
-            System.out.println("Getting our BWM based on type did not return the correct type");
+            logger.warning("Getting our BWM based on type did not return the correct type");
+            throw new RuntimeException("Getting our BWM based on type did not return the correct type");
         }
 
         Car updatedBmw = new Car(bmw.getRegistration(), "ULTRA BMW");
@@ -37,9 +47,11 @@ public class Simulator {
 
         carService.deleteCar(updatedBmw.getRegistration());
         if (carService.getCars().size() != 4) {
-            System.out.println("We created 5 cars then deleted 1, but getCars returned " + carService.getCars().size() + " cars!");
+            logger.warning("We created 5 cars then deleted 1, but getCars returned " + carService.getCars().size() + " cars!");
+            throw new RuntimeException("We created 5 cars then deleted 1, but getCars returned " + carService.getCars().size() + " cars!");
         }
 
+        logger.info("Successfully finished running test case 1");
     }
 
     private boolean hasSameTypeOnServer(Car bmw) {
