@@ -20,7 +20,7 @@ public class Simulator {
 
         carService.deleteAllCars();
 
-        Car bmw = carService.create("BWM");
+        Car bmw = carService.create("BMW");
         if (!bmw.getType().equals("BMW")) {
             logger.warning("We created a car with type BMW, but type returned was: " + bmw.getType());
             throw new RuntimeException("We created a car with type BMW, but type returned was: " + bmw.getType());
