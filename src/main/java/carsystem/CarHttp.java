@@ -3,14 +3,16 @@ package carsystem;
 import com.google.gson.Gson;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CarHttp {
+
+    private final static Logger logger = Logger.getLogger(CarHttp.class.getName());
 
     private final URL baseUrl;
 
@@ -44,7 +46,7 @@ public class CarHttp {
         con.setRequestMethod("PUT");
         con.setDoOutput(true);
 
-        System.out.println("Making PUT request to URL: " + url.toString());
+        logger.fine("Making PUT request to URL: " + url.toString());
 
         OutputStream os = con.getOutputStream();
         os.write(bytes);
@@ -67,7 +69,7 @@ public class CarHttp {
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestMethod("DELETE");
 
-        System.out.println("Making DELETE request to URL: " + url.toString());
+        logger.fine("Making DELETE request to URL: " + url.toString());
         con.connect();
         printHeaders(con.getHeaderFields());
 
@@ -85,7 +87,7 @@ public class CarHttp {
         con.setRequestMethod("POST");
         con.setDoOutput(true);
 
-        System.out.println("Making POST request to URL: " + url.toString());
+        logger.fine("Making POST request to URL: " + url.toString());
 
         OutputStream os = con.getOutputStream();
         os.write(payload);
@@ -100,7 +102,7 @@ public class CarHttp {
     }
 
     private HttpResponse sendGet(URL url) throws IOException {
-        System.out.println("\nSending 'GET' request to URL : " + url);
+        logger.fine("\nSending 'GET' request to URL : " + url);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.connect();
@@ -117,13 +119,16 @@ public class CarHttp {
     }
 
     private void printHeaders(Map<String, List<String>> headerFields) {
-        System.out.println("\n##### HTTP response headers ######");
+        StringBuilder logMsg = new StringBuilder();
+        logMsg.append("\n##### HTTP response headers ######");
         Iterator<String> iterator = headerFields.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            System.out.println(key + ": " + headerFields.get(key));
+            logMsg.append(key + ": " + headerFields.get(key));
         }
-        System.out.println("####################################\n");
+        logMsg.append("####################################\n");
+
+        logger.fine(logMsg.toString());
     }
 
     private String readRequestBody(InputStream httpExchange) throws IOException {

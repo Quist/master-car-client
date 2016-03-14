@@ -72,4 +72,12 @@ public class CarService {
             e.printStackTrace();
         }
     }
+
+    public void deleteAllCars() {
+        try {
+            http.delete("/cars");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
