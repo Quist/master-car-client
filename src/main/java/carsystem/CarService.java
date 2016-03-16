@@ -24,7 +24,7 @@ public class CarService {
         try {
             response = http.post("/cars", carJson);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return new Gson().fromJson(response.getResponse(), Car.class);
@@ -35,8 +35,7 @@ public class CarService {
         try {
             response = http.get("/cars");
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
 
         List<Car> cars = new Gson().fromJson(response.getResponse(), new TypeToken<List<Car>>() {
@@ -50,8 +49,7 @@ public class CarService {
         try {
             response = http.get("/cars/" + carId);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
 
         return new Gson().fromJson(response.getResponse(), Car.class);
@@ -59,9 +57,9 @@ public class CarService {
 
     public void deleteCar(String carId) {
         try {
-            HttpResponse response = http.delete("/cars/" + carId);
+            http.delete("/cars/" + carId);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -69,7 +67,7 @@ public class CarService {
         try {
             http.put("/cars/" + car.getRegistration(), new Gson().toJson(car));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -77,7 +75,7 @@ public class CarService {
         try {
             http.delete("/cars");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

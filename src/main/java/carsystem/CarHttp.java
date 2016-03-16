@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CarHttp {
@@ -40,10 +39,15 @@ public class CarHttp {
         return sendPut(new URL(baseUrl.toString() + uri), payload.getBytes());
     }
 
+    private void httpPreProcessor(HttpURLConnection con) {
+        con.setRequestProperty("Dil-auth", "1337");
+    }
+
     private HttpResponse sendPut(URL url, byte[] bytes) throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("Content-Type","application/json");
         con.setRequestMethod("PUT");
+        httpPreProcessor(con);
         con.setDoOutput(true);
 
         logger.fine("Making PUT request to URL: " + url.toString());
@@ -68,6 +72,7 @@ public class CarHttp {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestMethod("DELETE");
+        httpPreProcessor(con);
 
         logger.fine("Making DELETE request to URL: " + url.toString());
         con.connect();
@@ -86,6 +91,7 @@ public class CarHttp {
         con.setRequestProperty("Content-Type","application/json");
         con.setRequestMethod("POST");
         con.setDoOutput(true);
+        httpPreProcessor(con);
 
         logger.fine("Making POST request to URL: " + url.toString());
 
@@ -105,6 +111,7 @@ public class CarHttp {
         logger.fine("\nSending 'GET' request to URL : " + url);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
+        httpPreProcessor(con);
         con.connect();
 
         printHeaders(con.getHeaderFields());
