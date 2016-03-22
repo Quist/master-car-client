@@ -11,13 +11,19 @@ public class Client {
 
     public static void main(String args[]) throws IOException {
         if (args.length < 1) {
-            System.out.println("Usage: client serverUrl");
+            System.out.println("Usage: client [--client] serverUrl");
             System.exit(1);
         }
 
-        String url = args[0];
-        //carsystem.Client client = new carsystem.Client(new URL(url));
-        new Simulator(new CarService(new CarHttp(new URL(url)))).start();
+
+        if (args.length > 1 && args[0].equals("--client")) {
+            String url = args[1];
+            carsystem.Client client = new carsystem.Client(new URL(url));
+            new CommandLineInterface(client).start();
+        } else {
+            String url = args[0];
+            new Simulator(new CarService(new CarHttp(new URL(url)))).start();
+        }
     }
 
     public Client(URL url) {
