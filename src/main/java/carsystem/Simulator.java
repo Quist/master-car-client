@@ -1,22 +1,52 @@
 package carsystem;
 
-import java.util.logging.Logger;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import java.util.logging.*;
 
 public class Simulator {
     private final static Logger logger = Logger.getLogger(Simulator.class.getName());
 
     private final CarService carService;
+    private int n = 10;
 
     Simulator(CarService carService){
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        logger.setUseParentHandlers(false);
+        consoleHandler.setFormatter(new Formatter() {
+            @Override
+            public String format(LogRecord record) {
+                return "[" + record.getLevel() + "] "
+                        + record.getSourceClassName() + ":"
+                        + record.getSourceMethodName() + " "
+                        + record.getMessage() + "\n";
+            }
+        });
+
+        logger.addHandler(consoleHandler);
+
         this.carService = carService;
     }
 
     public void start() {
-        testCase1();
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+
+
+        for (int i = 0; i < n; i++) {
+            long ts1 = System.currentTimeMillis();
+            testCase1();
+            logger.info("Finished running test run " + i);
+            long ts2 = System.currentTimeMillis();
+            stats.addValue(ts2-ts1);
+        }
+        logger.info("Mean: " + stats.getMean());
+        logger.info("Standard Deviation: " + stats.getStandardDeviation());
+        logger.info("Variance: " + stats.getVariance());
+
     }
 
     private void testCase1() {
-        logger.info("Starting test case 1");
+        logger.fine("Starting test case 1");
 
         carService.deleteAllCars();
 
@@ -51,7 +81,7 @@ public class Simulator {
             throw new RuntimeException("We created 5 cars then deleted 1, but getCars returned " + carService.getCars().size() + " cars!");
         }
 
-        logger.info("Successfully finished running test case 1");
+        logger.fine("Successfully finished running test case 1");
     }
 
     private boolean hasSameTypeOnServer(Car bmw) {
