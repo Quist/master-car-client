@@ -2,21 +2,25 @@ package carsystem;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.logging.*;
 
 public class Simulator {
     private final static Logger logger = Logger.getLogger(Simulator.class.getName());
 
     private final CarService carService;
-    private int n = 10;
+    private final int n;
 
-    Simulator(CarService carService){
+    Simulator(CarService carService, int n) {
+        this.n = n;
         ConsoleHandler consoleHandler = new ConsoleHandler();
         logger.setUseParentHandlers(false);
         consoleHandler.setFormatter(new Formatter() {
             @Override
             public String format(LogRecord record) {
                 return "[" + record.getLevel() + "] "
+                        + record.getMillis() + ":   "
                         + record.getSourceClassName() + ":"
                         + record.getSourceMethodName() + " "
                         + record.getMessage() + "\n";
@@ -31,7 +35,7 @@ public class Simulator {
     public void start() {
         DescriptiveStatistics stats = new DescriptiveStatistics();
 
-
+        logger.info("Running " + n + " tests");
         for (int i = 0; i < n; i++) {
             long ts1 = System.currentTimeMillis();
             testCase1();
@@ -39,6 +43,9 @@ public class Simulator {
             long ts2 = System.currentTimeMillis();
             stats.addValue(ts2-ts1);
         }
+
+        logger.info("Finished running " + n + " tests");
+        logger.info(LocalDateTime.now().toString());
         logger.info("Mean: " + stats.getMean());
         logger.info("Standard Deviation: " + stats.getStandardDeviation());
         logger.info("Variance: " + stats.getVariance());

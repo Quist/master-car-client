@@ -11,7 +11,7 @@ public class Client {
 
     public static void main(String args[]) throws IOException {
         if (args.length < 1) {
-            System.out.println("Usage: client [--client] serverUrl");
+            System.out.println("Usage: client [--client] -n n serverUrl");
             System.exit(1);
         }
 
@@ -21,8 +21,9 @@ public class Client {
             carsystem.Client client = new carsystem.Client(new URL(url));
             new CommandLineInterface(client).start();
         } else {
-            String url = args[0];
-            new Simulator(new CarService(new CarHttp(new URL(url)))).start();
+            String url = args[2];
+            int n = Integer.parseInt(args[1]);
+            new Simulator(new CarService(new CarHttp(new URL(url))), n).start();
         }
     }
 
