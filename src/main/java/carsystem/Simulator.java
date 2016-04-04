@@ -20,7 +20,6 @@ public class Simulator {
             @Override
             public String format(LogRecord record) {
                 return "[" + record.getLevel() + "] "
-                        + record.getMillis() + ":   "
                         + record.getSourceClassName() + ":"
                         + record.getSourceMethodName() + " "
                         + record.getMessage() + "\n";
@@ -49,6 +48,9 @@ public class Simulator {
         logger.info("Mean: " + stats.getMean());
         logger.info("Standard Deviation: " + stats.getStandardDeviation());
         logger.info("Variance: " + stats.getVariance());
+        logger.info("Min: " + stats.getMin());
+        logger.info("Max: " + stats.getMax());
+        logger.info("Median: " + stats.getPercentile(50));
 
     }
 
